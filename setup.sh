@@ -19,31 +19,34 @@ echo ""
 
 # Check docker & docker-compose
 if ! command -v docker &> /dev/null; then
-    echo -e "${RED}✗ Docker není nainstalován. Instaluj: https://docs.docker.com/engine/install/${NC}"
-    exit 1
+    echo -e "${YELLOW}⚠ Docker is not installed. Installing Docker automatically from get.docker.com...${NC}"
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh get-docker.sh
+    rm get-docker.sh
 fi
 if ! docker compose version &> /dev/null && ! command -v docker-compose &> /dev/null; then
-    echo -e "${RED}✗ Docker Compose není dostupný.${NC}"
-    exit 1
+    echo -e "${YELLOW}⚠ Docker Compose is missing. Installing docker-compose-plugin...${NC}"
+    sudo apt-get update
+    sudo apt-get install docker-compose-plugin -y
 fi
-echo -e "${GREEN}✓ Docker nalezen${NC}"
+echo -e "${GREEN}✓ Docker and Compose are ready${NC}"
 
 # Create .env if not exists
 if [ -f ".env" ]; then
-    echo -e "${YELLOW}⚠  Soubor .env již existuje. Přeskakuji generování.${NC}"
+    echo -e "${YELLOW}⚠  .env file already exists. Skipping generation.${NC}"
 else
-    echo -e "\n${BOLD}Generování .env souboru s bezpečnými náhodnými klíči...${NC}"
+    echo -e "\n${BOLD}Generating .env file with secure random keys...${NC}"
 
     DB_PASS=$(openssl rand -base64 32 | tr -d '=/+' | head -c 32)
     JWT_SECRET=$(openssl rand -base64 48 | tr -d '=/+' | head -c 48)
 
     cat > .env << EOF
 # ════════════════════════════════════════════════════
-# Aegis Hub – Konfigurace
-# Vygenerováno: $(date)
+# Aegis Hub – Configuration
+# Generated: $(date)
 # ════════════════════════════════════════════════════
 
-# Databáze (PostgreSQL)
+# Database (PostgreSQL)
 POSTGRES_USER=aegis
 POSTGRES_PASSWORD=${DB_PASS}
 POSTGRES_DB=aegis_db
@@ -54,13 +57,13 @@ DB_PASSWORD=${DB_PASS}
 DB_NAME=aegis_db
 JWT_SECRET=${JWT_SECRET}
 EOF
-    echo -e "${GREEN}✓ Soubor .env vygenerován s bezpečnými hesly${NC}"
+    echo -e "${GREEN}✓ .env file generated with secure passwords${NC}"
 fi
 
 # Ask for domain
 echo ""
-echo -e "${BOLD}Konfigurace domény:${NC}"
-read -p "  Zadejte vaši doménu (např. aegis.example.com): " DOMAIN
+echo -e "${BOLD}Domain Configuration:${NC}"
+read -p "  Enter your domain (e.g. aegis.example.com): " DOMAIN
 
 if [ -n "$DOMAIN" ]; then
     # Update Caddyfile
@@ -68,13 +71,13 @@ if [ -n "$DOMAIN" ]; then
         # Backup and update domain
         cp frontend/Caddyfile frontend/Caddyfile.bak
         sed -i "s|aegis\..*\..*\s|${DOMAIN} |g" frontend/Caddyfile
-        echo -e "${GREEN}✓ Caddyfile aktualizován pro doménu: ${DOMAIN}${NC}"
+        echo -e "${GREEN}✓ Caddyfile updated for domain: ${DOMAIN}${NC}"
     fi
 fi
 
 # Build and start
 echo ""
-echo -e "${BOLD}Spouštím Docker Compose...${NC}"
+echo -e "${BOLD}Starting Docker Compose...${NC}"
 if command -v docker-compose &> /dev/null; then
     docker-compose up -d --build
 else
@@ -83,7 +86,7 @@ fi
 
 echo ""
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════${NC}"
-echo -e "${GREEN}${BOLD}  ✓ Aegis Hub byl úspěšně spuštěn!${NC}"
+echo -e "${GREEN}${BOLD}  ✓ Aegis Hub was successfully started!${NC}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════${NC}"
 echo ""
 if [ -n "$DOMAIN" ]; then
@@ -92,14 +95,14 @@ else
     echo -e "  🌐 URL: ${BOLD}http://localhost${NC}"
 fi
 echo ""
-echo -e "  ${BOLD}Další kroky:${NC}"
-echo -e "  1. Otevřete aplikaci a zaregistrujte PRVNÍ účet"
-echo -e "     → první registrovaný uživatel automaticky dostane práva admina"
-echo -e "  2. Přihlaste se jako admin → Administrace → Nastavení"
-echo -e "     → nastavte název instance, vypněte veřejné registrace atd."
-echo -e "  3. Vytvořte kanály v sekci Chat"
+echo -e "  ${BOLD}Next Steps:${NC}"
+echo -e "  1. Open the application and register the FIRST account"
+echo -e "     → This first user will automatically become the permanent, non-deletable Administrator."
+echo -e "  2. Login as admin → Administration → Settings"
+echo -e "     → set instance name, disable public registrations, etc."
+echo -e "  3. Create channels in the Chat section"
 echo ""
-echo -e "  ${YELLOW}Pro zastavení:${NC} docker compose down"
-echo -e "  ${YELLOW}Pro logy:${NC}     docker compose logs -f"
-echo -e "  ${YELLOW}Pro update:${NC}   git pull && bash deploy.sh"
+echo -e "  ${YELLOW}To stop:${NC} docker compose down"
+echo -e "  ${YELLOW}For logs:${NC}  docker compose logs -f"
+echo -e "  ${YELLOW}To update:${NC} git pull && bash deploy.sh"
 echo ""
