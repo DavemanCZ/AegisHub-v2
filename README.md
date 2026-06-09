@@ -1,3 +1,4 @@
+[README.md](https://github.com/user-attachments/files/28754836/README.md)
 # 🛡️ Aegis Hub
 
 Aegis Hub is an open-source, zero-knowledge encrypted personal hub, password manager, and private chat platform. It is designed to be fully self-hosted, ensuring that you maintain complete ownership and control over your data.
@@ -7,7 +8,7 @@ Aegis Hub is an open-source, zero-knowledge encrypted personal hub, password man
 ---
 
 <a name="english"></a>
-## EN English
+## 🇬🇧 English
 
 ### Features
 - **End-to-End Encryption (E2EE):** All passwords, secure notes, bookmarks, and files are encrypted on the client side using AES-GCM-256 before ever reaching the server.
@@ -15,12 +16,20 @@ Aegis Hub is an open-source, zero-knowledge encrypted personal hub, password man
 - **Private E2EE Chat:** Real-time chat (channels and DMs) with forward secrecy using ECDH (Elliptic Curve Diffie-Hellman). Features inline image decrypt/preview and real-time message unsend.
 - **Integrated TOTP 2FA Authenticator:** A built-in authenticator tool to manage your two-factor tokens.
 - **PWA Ready:** Install Aegis Hub directly to your mobile device as a native app with push capabilities.
+- **Modern UI:** Built using a beautiful, responsive "Glassmorphism" design system.
 
 ### Quick Start (Docker)
 
 To deploy Aegis Hub on your own server (e.g., VPS or Proxmox VM):
 
-1. **Clone the repository:**
+1. **Install Prerequisites (Docker & Git):**
+   Aegis Hub requires Docker to run. If you are starting on a fresh Ubuntu server, install it using:
+   ```bash
+   sudo apt update && sudo apt install git -y
+   curl -fsSL https://get.docker.com | sudo sh
+   ```
+
+2. **Clone the repository:**
    ```bash
    git clone https://github.com/DavemanCZ/AegisHub-V2.git
    cd AegisHub-V2
@@ -42,20 +51,28 @@ To deploy Aegis Hub on your own server (e.g., VPS or Proxmox VM):
 ---
 
 <a name="čeština"></a>
-## CZ Čeština
+## 🇨🇿 Čeština
 
 ### Funkce
 - **End-to-End Šifrování (E2EE):** Všechna hesla, poznámky, záložky a soubory jsou zašifrovány přímo u vás v prohlížeči (klientovi) pomocí AES-GCM-256 ještě předtím, než odejdou na server.
-- **Zero-Knowledge Architektura:** Server nikdy nezná vaše Master Heslo. K ověřování používá pouze `auth_token` derivovaný pomocí Argon2 a uchovává pouze váš bezpečně zašifrovaný Trezorový Klíč.
-- **Soukromý E2EE Chat:** Real-time komunikace s dopřednou bezpečností přes ECDH. Umožňuje inline zobrazení zašifrovaných médií, sdílení souborů a funkci "Unsend".
-- **Zabudovaný 2FA TOTP:** Integrovaný autentikátor pro generování dvoufázových hesel pro cizí platformy.
+- **Zero-Knowledge Architektura:** Server nikdy nezná vaše Master Heslo. K ověřování používá pouze `auth_token` derivovaný pomocí Argon2 a uchovává pouze váš bezpečně zašifrovaný Trezorový Klíč (Vault Key).
+- **Soukromý E2EE Chat:** Real-time komunikace s dopřednou bezpečností přes ECDH. Umožňuje inline zobrazení zašifrovaných médií, sdílení souborů a funkci "Unsend" (Smazání zprávy v reálném čase pro obě strany).
+- **Zabudovaný 2FA TOTP:** Integrovaný autentikátor pro generování dvoufázových hesel pro cizí platformy (náhrada za Google Auth).
 - **PWA Aplikace:** Možnost instalace rovnou na plochu telefonu jako nativní aplikace.
+- **Moderní vzhled:** Nádherný prémiový skleněný design (Glassmorphism).
 
 ### Rychlá instalace (Docker)
 
-Instalace Aegis Hub na váš vlastní server nebo Proxmox je díky automatickému instalátoru extrémně jednoduchá:
+Instalace Aegis Hub na váš vlastní čistý server nebo Proxmox je díky automatickému instalátoru extrémně jednoduchá:
 
-1. **Stáhněte si repozitář:**
+1. **Nainstalujte předpoklady (Docker & Git):**
+   Na čistém serveru musíte mít nainstalovaný Docker a Git. Můžete je nainstalovat pomocí:
+   ```bash
+   sudo apt update && sudo apt install git -y
+   curl -fsSL https://get.docker.com | sudo sh
+   ```
+
+2. **Stáhněte si repozitář:**
    ```bash
    git clone https://github.com/DavemanCZ/AegisHub-V2.git
    cd AegisHub-V2
